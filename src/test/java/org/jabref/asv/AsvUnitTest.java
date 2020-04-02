@@ -195,5 +195,32 @@ public class AsvUnitTest
 
         assertEquals("Test file",
                 FileUtil.find(null, entry, "existingTestFile.txt"));
+    }     
+                      
+    @AsvTest
+    @Test
+    public void testLargeLibrary()
+    {
+        BibDatabase bdb = new BibDatabase();
+        
+        // Create 10.000 library entries
+        for (int i = 0; i < 10000; i++) {       
+            BibEntry entry = new BibEntry(BibtexEntryTypes.ARTICLE);
+            entry.setField(FieldName.TITLE, "An Incredibly Interesting Article" + i);
+            entry.setField(FieldName.AUTHOR, "Mr. Know It All");
+            entry.setField(FieldName.JOURNAL, "International Journal of Interesting Stuff");
+
+            bdb.insertEntry(entry);    
+        }
+        int entryNumber = 0 + (int)(Math.random() * ((10000 - 0) + 1));   
+
+        // Create a query that should result in entry2's title
+        SearchQuery q = new SearchQuery("software", false, false);
+        int timeBefore = System.currentTimeMillis();
+        // Get the results
+        List<BibEntry> results = new DatabaseSearcher(q, bdb).getMatches();
+        int timeAfter = System.currentTimeMillis();
+        // Search should not take longer than 1,5 seconds
+        assertTrue((timeAfter-timeBefore) < 1500);
     }
 }
