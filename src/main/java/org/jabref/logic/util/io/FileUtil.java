@@ -108,7 +108,12 @@ public class FileUtil {
     public static List<String> uniquePathSubstrings(List<String> paths) {
         List<Stack<String>> stackList = new ArrayList<>(paths.size());
         // prepare data structures
-        prepareUniquePathSubstrings(paths);
+        for (String path : paths) {
+            List<String> directories = Arrays.asList(path.split(Pattern.quote(File.separator)));
+            Stack<String> stack = new Stack<>();
+            stack.addAll(directories);
+            stackList.add(stack);
+        }
 
         List<String> pathSubstrings = new ArrayList<>(Collections.nCopies(paths.size(), ""));
 
