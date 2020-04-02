@@ -39,6 +39,8 @@ public class AsvUnitTest
     private static ImportFormatPreferences importFormatPreferences;
     private BibEntryWriter writer;
     private final FileUpdateMonitor fileMonitor = new DummyFileUpdateMonitor();
+    private Path existingTestFile;
+    private Path rootDir;
 
     @BeforeEach
     public void setup()
@@ -171,5 +173,28 @@ public class AsvUnitTest
 
         // Check if the group does indeed contain the entry
         assertTrue(group.contains(entry1));
+    }
+        
+    @AsvTest
+    @Test
+    public void testAddingFile()
+    {
+        rootDir = "/src/test/java/org/jabref/asv/";
+        Path subDir = rootDir.resolve("1");
+        Files.createDirectory(subDir);
+
+        existingTestFile = subDir.resolve("existingTestFile.txt");
+        Files.createFile(existingTestFile);
+        Files.write(existingTestFile, "existingTestFile.txt".getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+        
+        //Create new  entry and add file to it
+        String fileNamePattern = "[bibtexkey] - [fulltitle]";
+        BibEntry entry = new BibEntry();
+        entry.setCiteKey("1234");
+        entry.setField(StandardField.TITLE, "mytitle");
+        entry.addFile((new LinkedFile("Test file", "existingTestFile.txt", "TXT"));
+
+        assertEquals("Test file",
+                FileUtil.find(null, entry, "existingTestFile.txt"));
     }
 }
