@@ -187,8 +187,7 @@ public class AsvUnitTest
         Files.createFile(existingTestFile);
         Files.write(existingTestFile, "existingTestFile.txt".getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
         
-        //Create new  entry and add file to it
-        String fileNamePattern = "[bibtexkey] - [fulltitle]";
+        //Create new  entry and add file to it       
         BibEntry entry = new BibEntry();
         entry.setCiteKey("1234");
         entry.setField(StandardField.TITLE, "mytitle");
